@@ -32,7 +32,8 @@ class RecorderExampleState extends State<RecorderExample> {
   bool _undoused;
   bool _canrecordfurther;
   String pathtodel;
-  List<String> locations;
+  List<String> locations, tempLocations;
+  bool canMerge = false;
 
   @override
   void initState() {
@@ -130,17 +131,23 @@ class RecorderExampleState extends State<RecorderExample> {
               new Text("total duration: $totalDuration"),
               new Text(
                   "Audio recording duration : ${_current?.duration.toString()}"),
-              FlatButton(
-                onPressed: _currentStatus != RecordingStatus.Recording
-                    ? () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Display(locations: locations)));
-                      }
-                    : null,
-                child: Text('Saved Files'),
+              Row(
+                children: [
+                  canMerge == true
+                      ? RaisedButton(
+                          onPressed: _currentStatus != RecordingStatus.Recording
+                              ? () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Display(
+                                              locations: tempLocations)));
+                                }
+                              : null,
+                          child: Text('Merge'),
+                        )
+                      : SizedBox(width: 5),
+                ],
               ),
             ]),
       ),
@@ -213,6 +220,7 @@ class RecorderExampleState extends State<RecorderExample> {
       var recording = await _recorder.current(channel: 0);
       setState(() {
         _current = recording;
+        canMerge = false;
       });
 
       const tick = const Duration(milliseconds: 50);
@@ -262,6 +270,10 @@ class RecorderExampleState extends State<RecorderExample> {
 
   _stopBatch() async {
     _stop();
+    setState(() {
+      tempLocations = locations;
+      canMerge = true;
+    });
     _init();
   }
 
@@ -295,5 +307,4 @@ class RecorderExampleState extends State<RecorderExample> {
     }
     return Text(text, style: TextStyle(color: Colors.white));
   }
-
 }

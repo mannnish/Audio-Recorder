@@ -90,6 +90,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.5"
+  flutter_ffmpeg:
+    dependency: "direct main"
+    description:
+      name: flutter_ffmpeg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.10"
   flutter_test:
     dependency: "direct dev"
     description: flutter
